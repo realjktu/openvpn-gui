@@ -1,0 +1,28 @@
+
+version: '2' 
+services: 
+  openvpn:
+    cap_add:
+     - NET_ADMIN
+    image: kylemanna/openvpn
+    container_name: openvpn
+    ports:
+     - "1194:1194/tcp"
+    restart: always
+    volumes:
+     - /home/jktu/work/ovpn_gui/test_certs/:/etc/openvpn
+  openvpn_gui:
+    image: jktu/openvpn-gui:v0.1
+    container_name: openvpn_gui
+    ports:
+     - "8000:80/tcp"
+    restart: always
+    volumes:
+     - /home/jktu/work/ovpn_gui/test_certs/:/etc/openvpn
+    environment:
+     - DJANGO_DB_FILE=/etc/openvpn/openvpn_gui_db.sqlite3
+     - DJANGO_SECRET_KEY=<some random key>
+     - SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=<google oauth2 key>
+     - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=<google oauth2 secret>
+     - WHITELISTED_DOMAINS=foo.com bar.com
+     - WHITELISTED_EMAILS=me@foo.com you@bar.com

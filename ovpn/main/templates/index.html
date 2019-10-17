@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OVPN</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+  <p>Logged as {{ user.username }}</p>
+  {% if is_config_exists == True %}
+    <a  href="download_ovpn" download>Download OpenVPN config</a>
+  {% else %}
+    Cannot get config file
+  {% endif %}
+  <br><br>
+  <a  href="/accounts/logout/">Logout</a>
+{% endif %}
+</body>
+</html>
