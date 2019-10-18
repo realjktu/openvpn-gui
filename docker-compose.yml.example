@@ -26,3 +26,5 @@ services:
      - SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=<google oauth2 secret>
      - WHITELISTED_DOMAINS=foo.com bar.com
      - WHITELISTED_EMAILS=me@foo.com you@bar.com
+     - DJANGO_DEBUG=False
+     - DJANGO_ALLOWED_HOSTS=*

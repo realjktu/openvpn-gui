@@ -14,12 +14,12 @@ ENV EASYRSA_VARS_FILE $OPENVPN/vars
 
 # Prevents refused client connection because of an expired CRL
 ENV EASYRSA_CRL_DAYS 3650
-
+RUN mkdir -p /var/tmp/nginx/
+EXPOSE 80/tcp
+WORKDIR /ovpn
 COPY ovpn_getclient /
+COPY ovpn_revokeclient /
 COPY ovpn_uwsgi.ini /
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY ovpn/. /ovpn/
-WORKDIR /ovpn
-RUN mkdir -p /var/tmp/nginx/
-EXPOSE 80/tcp
-CMD nginx && python3 manage.py migrate && uwsgi --ini /ovpn_uwsgi.ini
+CMD nginx && python3 manage.py collectstatic --noinput && python3 manage.py migrate && uwsgi --ini /ovpn_uwsgi.ini

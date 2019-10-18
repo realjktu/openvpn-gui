@@ -104,3 +104,4 @@ ENV/
 test_certs
 docker-compose.yml
 gui_env
+ovpn/db.sqlite3

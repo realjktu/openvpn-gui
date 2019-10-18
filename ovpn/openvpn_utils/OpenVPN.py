@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-import os, subprocess
+import os, subprocess, datetime, shutil
 
 class OpenVPN:
     def get_config_file_response(self, username):
@@ -30,7 +30,23 @@ class OpenVPN:
         return output
 
     def create_user_certificate(self, username):
-        bashCommand = ("easyrsa build-client-full %s nopass"%client_name)
+        try:
+            bashCommand = ("easyrsa build-client-full %s nopass"%username)
+            print(bashCommand)
+            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+            while True:
+                line = process.stdout.readline()
+                if line != b'':
+                    print(line.rstrip())
+                else:
+                    break
+            output, error = process.communicate()
+        except:
+            return False
+        return True
+
+    def delete_user_certificate(self, username):
+        bashCommand = ("/ovpn_revokeclient %s"%username)
         print(bashCommand)
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         while True:
@@ -41,3 +57,20 @@ class OpenVPN:
                 break
         output, error = process.communicate()
 
+    def get_server_config_file(self):
+        try:
+            config_path = '/etc/openvpn/openvpn.conf'
+            f=open(config_path, "r")
+            return f.read()
+        except:
+            return None
+
+    def save_server_config_file(self, config):
+        config_path = '/etc/openvpn/openvpn.conf'
+        dt = datetime.datetime.now()
+        backup_path = ('%s.%s%s%s%s%s%s'%(config_path, dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second))
+        shutil.copyfile(config_path, backup_path)
+        f=open(config_path, "w")
+        f.write(config)
+        f.write('\n')
+        f.close()

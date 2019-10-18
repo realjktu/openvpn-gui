@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OVPN</title>
+</head>
+<body>
+<form action="ovpn_edit" method="post">
+    {% csrf_token %}
+    <textarea name="config" cols="100" rows="50" required id="id_config">{{ form.config.value }}</textarea>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<br><br>
+<a  href="/main">Cancel</a>
+</body>
+</html>

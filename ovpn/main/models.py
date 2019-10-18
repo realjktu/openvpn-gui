@@ -43,14 +43,16 @@ def create_customer(sender, instance, created, **kwargs):
     #/ovpn_getclient {client_name} > certificate.ovpn;    
 
 def delete_customer(sender, instance, **kwargs):
-    print("Delete is called")
-    print("!%s"%instance)
+    client_name = instance
+    print("Delete is called for %s user"%client_name)
+    ovpn = OpenVPN()
+    ovpn.delete_user_certificate(client_name)
 
 
 #class User(models.Model):
 #    user_name = models.CharField(max_length=200)
 #    pub_date = models.DateTimeField('date published')
 
-signals.post_save.connect(receiver=create_customer, sender=usr, dispatch_uid="create_customer")
+#signals.post_save.connect(receiver=create_customer, sender=usr, dispatch_uid="create_customer")
 signals.post_delete.connect(receiver=delete_customer, sender=usr, dispatch_uid="create_customer")
 
